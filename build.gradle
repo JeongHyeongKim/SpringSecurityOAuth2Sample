@@ -1,0 +1,43 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.6.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+}
+
+group = 'com.jeonghyeong'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	
+	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
+	
+	compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.4.0.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-jwt', version: '1.1.0.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.3.1.RELEASE'
+	compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.1.RELEASE'
+	
+	compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+}
+
+test {
+	useJUnitPlatform()
+}
