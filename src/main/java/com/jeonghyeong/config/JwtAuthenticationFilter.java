@@ -32,10 +32,6 @@ import com.jeonghyeong.repository.UserRepository;
 @SuppressWarnings("deprecation")
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter{
 
-	
-
-	
-	
 	private UserRepository userRepo;
 	
 	private UserAuthorityRepository userAuthorityRepo;

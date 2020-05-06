@@ -70,12 +70,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
             http.csrf()
-                    .disable();
-            http.formLogin();
-
-            http.addFilter(new JwtAuthenticationFilter(authenticationManagerBean(), userRepo, userAuthorityRepo));
-            http.authorizeRequests()
-            .antMatchers("/user/me").hasAnyRole("USER", "ROLE_USER");
+                .disable()
+                .formLogin();
+            //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            //stateless로 설정하면, authorization code가 안나온다. 왜 그런 것일까?
+            http.addFilter(new JwtAuthenticationFilter(authenticationManagerBean(), userRepo, userAuthorityRepo))
+            	.authorizeRequests()
+            	.antMatchers("/user/me").hasAnyRole("USER", "ROLE_USER");
 
 
     }
