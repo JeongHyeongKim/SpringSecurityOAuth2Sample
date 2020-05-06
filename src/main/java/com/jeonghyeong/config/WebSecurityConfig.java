@@ -17,6 +17,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.jeonghyeong.repository.UserAuthorityRepository;
+import com.jeonghyeong.repository.UserRepository;
 import com.jeonghyeong.service.SpringSecurityUserDetailService;
 
 
@@ -29,6 +31,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Autowired
     private PasswordEncoder globalPasswordEncoder;
+    
+    @Autowired
+	private UserRepository userRepo;
+	
+	@Autowired
+	private UserAuthorityRepository userAuthorityRepo;
 
     @Bean
     public PasswordEncoder setUpPasswordEncoder(){
@@ -65,9 +73,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     .disable();
             http.formLogin();
 
-
-//          http.authorizeRequests()
-//          .antMatchers("/user/me").hasAnyRole("USER", "ROLE_USER");
+            http.addFilter(new JwtAuthenticationFilter(authenticationManagerBean(), userRepo, userAuthorityRepo));
+            http.authorizeRequests()
+            .antMatchers("/user/me").hasAnyRole("USER", "ROLE_USER");
 
 
     }
