@@ -24,7 +24,12 @@ public class User implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5623122908051843000L;
+	private static final long serialVersionUID = 5551371459869285787L;
+
+	/**
+	 * 
+	 */
+	
 
 	@Id
     @Column(name="userid")
