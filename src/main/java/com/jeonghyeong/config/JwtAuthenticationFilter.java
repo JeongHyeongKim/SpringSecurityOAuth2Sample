@@ -79,6 +79,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter{
 		super.onUnsuccessfulAuthentication(request, response, failed);
 	}
 	
+	
 	@SuppressWarnings("unchecked")
 	private Authentication getAuthentication(HttpServletRequest request){
 
@@ -92,40 +93,41 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter{
 		String decodedJwt = JwtHelper.decode(token).getClaims();
 	
 		JSONParser jsonParser = new JSONParser();
-		JSONObject jsonObject = new JSONObject();
+		JSONObject jsonJwt = new JSONObject();
 		try {
-			jsonObject = (JSONObject) jsonParser.parse(decodedJwt);
+			jsonJwt = (JSONObject) jsonParser.parse(decodedJwt);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new UsernamePasswordAuthenticationToken(null, null, null);
 		}
-		String username = (String) jsonObject.get("user_name");
-		jsonObject.put("name", username);
-		jsonObject.remove("user_name");
+		String username = (String) jsonJwt.get("user_name");
+		long exp = (long) jsonJwt.get("exp");
 		
-		long exp = (long) jsonObject.get("exp");
 		
-		//check token is expired
+		
 		if(exp<(System.currentTimeMillis()/1000L)) {
 			System.out.println("Token expired");
-			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, null, null);
+			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(null, null, null);
 			authToken.setAuthenticated(false);
-			return new UsernamePasswordAuthenticationToken(username, null, null);
+			return new UsernamePasswordAuthenticationToken(null, null, null);
 		}
 		
-		//user_name -> name
+		User user = userRepo.findbyUsername(username);
 		
 		List<UserAuthority> userAuthorityList = new ArrayList<UserAuthority>(); 
 		List<GrantedAuthority> convertedAuthorityList = new ArrayList<GrantedAuthority>();
-		User user = userRepo.findbyUsername(username);
-		userAuthorityList =  userAuthorityRepo.getAuthorityList(user.getUserid());
-		System.out.println(userAuthorityList.size());
 		
+		JSONObject principle = new JSONObject();
+		principle.put("userId", user.getUserid());
+		principle.put("username", user.getUsername());
+		
+		userAuthorityList =  userAuthorityRepo.getAuthorityList(user.getUserid());
+		
+		//create Authentication Object's Authority List
 		for(int i=0;i<userAuthorityList.size();i++) {
 			convertedAuthorityList.add(new SimpleGrantedAuthority(userAuthorityList.get(i).getAuthority()));
 		}
 
-		return new UsernamePasswordAuthenticationToken(jsonObject, null, convertedAuthorityList);
+		return new UsernamePasswordAuthenticationToken(principle, null, convertedAuthorityList);
 		
     }
 	

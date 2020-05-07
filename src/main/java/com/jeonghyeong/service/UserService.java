@@ -1,6 +1,7 @@
 package com.jeonghyeong.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,6 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
 	
 	
-	//TODO : 어떤 형태로 컨트롤러에게 성공했다는 것을 반환 할 것인가?
 	public String userCreate(String username, String email, String password) {
 		
 		Date today = new Date();
@@ -79,6 +79,26 @@ public class UserService {
 		return userRepository.findbyUsername(username).getUsername();
 	}
 	
+	
+	public boolean removeUser(String username) {
+		User user = new User();
+		try {
+			user = userRepository.findbyUsername(username);
+		}catch (Exception e) {
+			
+			return false;
+		}
+		
+		
+		
+		return true;
+	}
+	
+	
+	public User updateUser(HashMap<String, String> map) {
+		
+		return new User();
+	}
 	//SELECT date_format(datetime, '%h:%i:%s') FROM `sandbox2` WHERE id=1
 	
 	
