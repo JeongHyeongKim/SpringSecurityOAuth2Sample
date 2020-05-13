@@ -40,7 +40,6 @@ public class UserService {
 		
 		user.setUserid(randomUserId);
 		user.setUsername(username);
-		user.setEmail(email);
 		user.setPassword(passwordEncoder.encode(password));
 		user.setLoginFailedCount(0);
 		user.setAccountCreateDate(today);

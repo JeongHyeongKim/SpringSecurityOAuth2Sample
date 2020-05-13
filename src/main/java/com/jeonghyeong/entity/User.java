@@ -43,9 +43,7 @@ public class User implements Serializable{
     @NotNull
     private String password;
 
-    @Column(name="email")
-    @NotNull
-    private String email;
+
 
     @Column(name="last_logined_date")
     @NotNull
